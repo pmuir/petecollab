@@ -1,11 +1,12 @@
 #!/bin/bash
 set -eu
+#set -x
 export OPENSHIFT_HOST="${OPENSHIFT_HOST:=10.1.2.3:8443}"
 export DOCKER_HOST="${DOCKER_HOST:=tcp://10.1.2.2:2376}"
 WORKSPACE=${WORKSPACE:=/sharedfolder/github.com/eivantsov/ticketmonster/}
 
-OUTPUT='/dev/null'
 OUTPUT='/dev/stdout'
+OUTPUT='/dev/null'
 
 cd $WORKSPACE &> $OUTPUT
 
@@ -32,7 +33,7 @@ function build() {
   popd &> $OUTPUT
 
   echo -e "### Brought up TicketMonster using ansible-container\n"
-  docker ps
+  docker ps --format "{{.ID}}\t{{.Status}}\t{{.Names}}"
 }
 
 function openshift() {
@@ -47,11 +48,12 @@ function openshift() {
   popd && rm -rf /tmp/demo/
 }
 
-echo -e "### Polling for updates to git...\n"
+echo -e "### Polling for updates to git..."
 while true; do
   git fetch &> build_log.txt
   echo -n '.'
   if [ -s build_log.txt ]; then
+    echo
     build
     exit
   fi
