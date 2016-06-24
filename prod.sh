@@ -1,6 +1,6 @@
 #!/bin/bash
 set -eu
-export DOCKER_HOST="${VARIABLE:=tcp://10.1.2.2:2376}"
+export DOCKER_HOST="${DOCKER_HOST:=tcp://10.1.2.2:2376}"
 WORKSPACE=${WORKSPACE:=/sharedfolder/github.com/eivantsov/ticketmonster/}
 
 cd $WORKSPACE &> /dev/null
