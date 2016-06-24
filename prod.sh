@@ -3,10 +3,10 @@ set -eu
 export DOCKER_HOST="${VARIABLE:=tcp://10.1.2.2:2376}"
 WORKSPACE=${WORKSPACE:=/sharedfolder/github.com/eivantsov/ticketmonster/}
 
-pushd $WORKSPACE >> /dev/null 2>&1
+cd $WORKSPACE &> /dev/null
 
 BRANCH=production
-git checkout $BRANCH >> /dev/null 2>&1
+git checkout $BRANCH &> /dev/null
 
 function build() {
   echo "### Updating git branch '$BRANCH'...\n"
@@ -33,14 +33,11 @@ function build() {
 }
 
 while true; do
-  git fetch > build_log.txt 2>&1
+  git fetch &> build_log.txt
   echo "$BRANCH"
   if [ -s build_log.txt ]; then
     build
-    popd
     exit
   fi
   sleep 5s
 done
-
-
