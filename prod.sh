@@ -53,7 +53,7 @@ while true; do
   git fetch &> build_log.txt
   echo -n '.'
   if [ -s build_log.txt ]; then
-    echo -e "\n\n"
+    echo -e "\n"
     build
     exit
   fi
