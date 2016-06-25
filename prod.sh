@@ -15,7 +15,7 @@ git checkout $BRANCH &> $OUTPUT
 
 function build() {
   echo -e "### Updating git branch '$BRANCH'..."
-  git pull origin $BRANCH &> $OUTPUT 
+  git pull -x theirs origin $BRANCH &> $OUTPUT 
   SHA1="$(git log --pretty=format:'%h' -n 1)"
   echo -e "### Fetched revision $SHA1\n"
 
