@@ -15,24 +15,24 @@ git checkout $BRANCH &> $OUTPUT
 
 
 function build() {
-  echo -e "### Updating git branch '$BRANCH'...\n"
+  echo -e "### Updating git branch '$BRANCH'..."
   git pull origin $BRANCH &> $OUTPUT 
   SHA1="$(git log --pretty=format:'%h' -n 1)"
   echo -e "### Fetched revision $SHA1\n"
 
-  echo -e "### Running Maven build...\n"
+  echo -e "### Running Maven build..."
   mvn package &> $OUTPUT
   cp target/ticket-monster.war misc/Dockerfiles/ticketmonster-ha/ticket-monster.war &> $OUTPUT
   # Silently deploy/build in openshift
   openshift &> $OUTPUT
   echo -e "### Built ticket-monster.war using maven\n"
 
-  echo -e "### Build and deploy to production using ansible-container...\n"
+  echo -e "### Build and deploy to production using ansible-container..."
   pushd misc/ &> $OUTPUT
   docker run -it --rm -v $(pwd):/work/ -e DETACH=1 -e DOCKER_HOST dustymabe/ansible-container --debug run &> $OUTPUT
   popd &> $OUTPUT
 
-  echo -e "### Brought up TicketMonster using ansible-container\n"
+  echo -e "### Brought up TicketMonster using ansible-container. Docker containers available are: \n"
   docker ps --format "{{.ID}}\t{{.Status}}\t{{.Names}}"
 }
 
@@ -48,12 +48,12 @@ function openshift() {
   popd && rm -rf /tmp/demo/
 }
 
-echo -e "### Polling for updates to git..."
+echo -ne "### Polling for updates in git repository..."
 while true; do
   git fetch &> build_log.txt
   echo -n '.'
   if [ -s build_log.txt ]; then
-    echo
+    echo -e "\n\n"
     build
     exit
   fi
