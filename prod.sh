@@ -5,8 +5,7 @@ export OPENSHIFT_HOST="${OPENSHIFT_HOST:=10.1.2.3:8443}"
 export DOCKER_HOST="${DOCKER_HOST:=tcp://10.1.2.2:2376}"
 WORKSPACE=${WORKSPACE:=/sharedfolder/github.com/eivantsov/ticketmonster/}
 
-OUTPUT='/dev/stdout'
-OUTPUT='/dev/null'
+OUTPUT="${OUTPUT:=/dev/null}"
 
 cd $WORKSPACE &> $OUTPUT
 
